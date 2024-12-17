@@ -312,8 +312,37 @@ def change_to_real_time(time):
     real_time = f"{str(time).zfill(4)[:2]}:{str(time).zfill(4)[2:]}"
     return real_time
 
-def delete_event():
-    pass
+def delete_event(tree):
+    while True:
+        try:
+
+            event_descriptions_list = tree.all_details_as_list()
+
+            if not event_descriptions_list:
+                return False
+
+            option = int(input("\nChoose event: ").strip())
+
+            time_of_node_to_delete = event_descriptions_list[option - 1][0]
+            tree.remove(time_of_node_to_delete)
+            print("\nEvent successfully deleted!")
+
+            return True
+        except IndexError:
+            print("\nChoose a number from the listed options.")
+        except ValueError:
+            print("\nInvalid option. Please enter a number.")
+
+def display_all(tree):
+    event_details_list = tree.all_details_as_list()
+
+    if not event_details_list:
+        print("No events available.")
+    else:
+        print("\nAll Scheduled Events:")
+        for time, description, time_of_day in event_details_list:
+            real_time = change_to_real_time(time)
+            print(f"- {description} at {real_time} {time_of_day}")
 
 def end():
     print("\nCalendar closing. . .")
@@ -349,20 +378,12 @@ def main():
 
                 case 3:
                     make_LightGray(f"\n\nDELETE EVENT\n{'-' * 15}")
-                    delete_event()
+                    delete_event(calendar)
 
 
                 case 4:
                     make_LightGray(f"\n\nDISPLAY ALL EVENTS\n{'-' * 15}")
-                    event_details_list = calendar.all_details_as_list()
-
-                    if not event_details_list:
-                        print("No events available.")
-                    else:
-                        print("\nAll Scheduled Events:")
-                        for time, description, time_of_day in event_details_list:
-                            real_time = change_to_real_time(time)
-                            print(f"- {description} at {real_time} {time_of_day}")
+                    display_all(calendar)
 
                 case 5:
                     end()
